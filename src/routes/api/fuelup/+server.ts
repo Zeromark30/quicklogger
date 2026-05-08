@@ -1,4 +1,5 @@
 import { json } from '@sveltejs/kit';
+import type { RequestHandler } from './$types';
 import { loadEnv } from '$lib/server/env';
 import { LubeLoggerClient, LubeLoggerError } from '$lib/server/lubelogger';
 import { CurrencyService, JsonFileStore, realFetcher } from '$lib/server/currency';
@@ -85,7 +86,7 @@ async function cloneJsonResponse(res: Response): Promise<Response> {
   });
 }
 
-export async function POST({ request }: { request: Request }) {
+export const POST: RequestHandler = async ({ request }) => {
   let parsed: Partial<FuelSubmissionInput>;
   try {
     parsed = await parseBody(request);
@@ -160,4 +161,4 @@ export async function POST({ request }: { request: Request }) {
     }
     return json({ error: (err as Error).message }, { status: 500 });
   }
-}
+};

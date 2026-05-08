@@ -18,7 +18,7 @@ describe('GET /healthz', () => {
     upstream.use(
       http.get('http://lubelog:8080/api/vehicles', () => HttpResponse.json([]))
     );
-    const res = await GET({} as unknown as Parameters<typeof GET>[0]);
+    const res = await GET({} as Parameters<typeof GET>[0]);
     expect(res.status).toBe(200);
     const body = await res.json();
     expect(body.ok).toBe(true);
@@ -30,7 +30,7 @@ describe('GET /healthz', () => {
         new HttpResponse(null, { status: 503 })
       )
     );
-    const res = await GET({} as unknown as Parameters<typeof GET>[0]);
+    const res = await GET({} as Parameters<typeof GET>[0]);
     expect(res.status).toBe(503);
   });
 });

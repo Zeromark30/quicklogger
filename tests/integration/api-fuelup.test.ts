@@ -48,7 +48,7 @@ const baseInput = {
 
 describe('POST /api/fuelup', () => {
   it('happy path — converts CAD/L → USD/gal and posts to lubelogger', async () => {
-    let observedForm: FormData | null = null;
+    let observedForm: FormData | undefined;
     upstream.use(
       http.get('https://api.frankfurter.dev/v1/latest', () => HttpResponse.json({ rates: { USD: 0.73 } })),
       http.post('http://lubelog:8080/api/vehicle/gasrecords/add', async ({ request }) => {

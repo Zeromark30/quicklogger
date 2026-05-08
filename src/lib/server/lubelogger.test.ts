@@ -47,7 +47,7 @@ describe('LubeLoggerClient', () => {
 
 	it('adds a gas record as form-data', async () => {
 		let observedQs = '';
-		let observedBody: FormData | null = null;
+		let observedBody: FormData | undefined;
 		server.use(
 			http.post(`${BASE}/api/vehicle/gasrecords/add`, async ({ request }) => {
 				observedQs = new URL(request.url).searchParams.toString();

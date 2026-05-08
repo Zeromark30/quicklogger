@@ -22,7 +22,7 @@ describe('GET /api/vehicles', () => {
         HttpResponse.json([{ id: 1, year: 2019, make: 'Honda', model: 'Civic Si' }])
       )
     );
-    const res = await GET({} as unknown as Parameters<typeof GET>[0]);
+    const res = await GET({} as Parameters<typeof GET>[0]);
     expect(res.status).toBe(200);
     const body = await res.json();
     expect(body).toHaveLength(1);
@@ -37,9 +37,9 @@ describe('GET /api/vehicles', () => {
         return HttpResponse.json([{ id: 1 }]);
       })
     );
-    await GET({} as unknown as Parameters<typeof GET>[0]);
-    await GET({} as unknown as Parameters<typeof GET>[0]);
-    await GET({} as unknown as Parameters<typeof GET>[0]);
+    await GET({} as Parameters<typeof GET>[0]);
+    await GET({} as Parameters<typeof GET>[0]);
+    await GET({} as Parameters<typeof GET>[0]);
     expect(calls).toBe(1);
   });
 
@@ -47,7 +47,7 @@ describe('GET /api/vehicles', () => {
     upstream.use(
       http.get('http://lubelog:8080/api/vehicles', () => new HttpResponse(null, { status: 503 }))
     );
-    const res = await GET({} as unknown as Parameters<typeof GET>[0]);
+    const res = await GET({} as Parameters<typeof GET>[0]);
     expect(res.status).toBe(502);
   });
 });

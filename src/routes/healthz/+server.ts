@@ -1,8 +1,9 @@
 import { json } from '@sveltejs/kit';
+import type { RequestHandler } from './$types';
 import { loadEnv } from '$lib/server/env';
 import { LubeLoggerClient } from '$lib/server/lubelogger';
 
-export async function GET() {
+export const GET: RequestHandler = async () => {
   try {
     const env = loadEnv();
     const client = new LubeLoggerClient({
@@ -18,4 +19,4 @@ export async function GET() {
       { status: 503 }
     );
   }
-}
+};

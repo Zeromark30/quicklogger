@@ -1,4 +1,5 @@
 import { json } from '@sveltejs/kit';
+import type { RequestHandler } from './$types';
 import { loadEnv } from '$lib/server/env';
 import { LubeLoggerClient, LubeLoggerError } from '$lib/server/lubelogger';
 import { TtlCache } from '$lib/server/cache';
@@ -7,7 +8,7 @@ const cache = new TtlCache<unknown>(5 * 60 * 1000);
 
 export function _resetCache() { cache.clear(); }
 
-export async function GET() {
+export const GET: RequestHandler = async () => {
   try {
     const env = loadEnv();
     const client = new LubeLoggerClient({
@@ -22,4 +23,4 @@ export async function GET() {
     }
     return json({ error: (err as Error).message }, { status: 500 });
   }
-}
+};

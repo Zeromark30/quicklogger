@@ -1,4 +1,5 @@
 import { json } from '@sveltejs/kit';
+import type { RequestHandler } from './$types';
 import { loadEnv } from '$lib/server/env';
 import { LubeLoggerClient, LubeLoggerError, type GasRecord } from '$lib/server/lubelogger';
 
@@ -7,7 +8,7 @@ function parseDate(s: string): number {
   return new Date(y, m - 1, d).getTime();
 }
 
-export async function GET({ url }: { url: URL }) {
+export const GET: RequestHandler = async ({ url }) => {
   const vehicleIdRaw = url.searchParams.get('vehicleId');
   if (!vehicleIdRaw) return json({ error: 'vehicleId required' }, { status: 400 });
   const vehicleId = Number(vehicleIdRaw);
@@ -29,4 +30,4 @@ export async function GET({ url }: { url: URL }) {
     }
     return json({ error: (err as Error).message }, { status: 500 });
   }
-}
+};

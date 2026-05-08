@@ -1,4 +1,5 @@
 import { json } from '@sveltejs/kit';
+import type { RequestHandler } from './$types';
 import { loadEnv } from '$lib/server/env';
 import {
   CurrencyService,
@@ -22,7 +23,7 @@ function service() {
 
 export function _resetForTests() { svc = null; }
 
-export async function GET({ url }: { url: URL }) {
+export const GET: RequestHandler = async ({ url }) => {
   const from = (url.searchParams.get('from') ?? '').toUpperCase();
   const to = (url.searchParams.get('to') ?? '').toUpperCase();
   if (!from || !to) return json({ error: 'from and to required' }, { status: 400 });
@@ -36,4 +37,4 @@ export async function GET({ url }: { url: URL }) {
     }
     return json({ error: (err as Error).message }, { status: 500 });
   }
-}
+};
