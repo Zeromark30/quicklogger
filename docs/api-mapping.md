@@ -1,23 +1,35 @@
 # API mapping
 
-Each endpoint exposed by quicklogger and how it maps to upstream LubeLogger calls.
+## LubeLogger upstream calls
 
-## `GET /healthz`
+The server module `src/lib/server/lubelogger.ts` is the only place
+quicklogger talks to LubeLogger. All requests carry `x-api-key:
+${LUBELOGGER_API_KEY}`. Base URL is `${LUBELOGGER_URL}` (typically
+`http://lubelog:8080` on the homelab br0 network).
 
-(populated in Task 10)
+| quicklogger method | LubeLogger endpoint | Notes |
+|---|---|---|
+| `listVehicles()` | `GET /api/vehicles` | Returns array of `Vehicle` |
+| `listGasRecords(vehicleId)` | `GET /api/vehicle/gasrecords?vehicleId=N` | Returns array of `GasRecord` |
+| `addGasRecord(vehicleId, payload)` | `POST /api/vehicle/gasrecords/add?vehicleId=N` | Body is `multipart/form-data` |
 
-## `GET /api/vehicles`
+`addGasRecord` form-data fields (LubeLogger schema, all stringly-typed):
+- `date` — `MM/DD/YYYY`
+- `odometer` — integer as string
+- `fuelconsumed` — decimal as string, in LubeLogger's configured unit (gallons_us by default)
+- `isfilltofull` — `'true'` | `'false'`
+- `missedfuelup` — `'true'` | `'false'`
+- `cost` — decimal as string, in LubeLogger's configured currency
+- `notes` — optional
+- `tags` — optional
 
-(populated in Task 11)
+Errors: any non-2xx response throws `LubeLoggerError` with `status` and
+`body` properties. The error name is `'LubeLoggerError'` so route
+handlers can `instanceof`-check.
 
-## `GET /api/vehicle/last-fuelup`
+Timeout: 5 seconds per request (configurable). Abort signal cancels
+the underlying fetch.
 
-(populated in Task 12)
+## quicklogger endpoints
 
-## `GET /api/fx`
-
-(populated in Task 13)
-
-## `POST /api/fuelup`
-
-(populated in Task 14)
+(populated in subsequent tasks)
