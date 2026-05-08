@@ -1,0 +1,138 @@
+<h2>Pick a fuel-entry form layout</h2>
+<p class="subtitle">Both are mobile-first, tappable, and submit on a single button press. Hit "A" or "B" — or tell me what to tweak.</p>
+
+<div class="cards">
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding: 0; background: #0f1117;">
+      <div style="max-width: 320px; margin: 0 auto; padding: 12px; font-family: -apple-system, BlinkMacSystemFont, sans-serif;">
+        <!-- iPhone-ish frame -->
+        <div style="background: #1a1d24; border-radius: 28px; padding: 16px; border: 1px solid #2a2d35; box-shadow: 0 8px 24px rgba(0,0,0,0.4);">
+          <!-- header -->
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 14px; padding: 0 4px;">
+            <div style="font-size: 13px; color: #9ca3af;">9:41</div>
+            <div style="font-size: 11px; color: #9ca3af;">⛽</div>
+          </div>
+          <!-- vehicle pill -->
+          <div style="background: #2a2d35; border-radius: 12px; padding: 10px 14px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between;">
+            <div>
+              <div style="font-size: 10px; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px;">Vehicle</div>
+              <div style="font-size: 15px; color: #e5e7eb; font-weight: 600;">2019 Civic Si</div>
+            </div>
+            <div style="color: #6b7280;">›</div>
+          </div>
+          <!-- odometer -->
+          <div style="margin-bottom: 12px;">
+            <div style="font-size: 10px; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Odometer</div>
+            <div style="background: #2a2d35; border-radius: 12px; padding: 14px; font-size: 22px; color: #e5e7eb; font-weight: 600;">87,432<span style="font-size: 13px; color: #6b7280; margin-left: 6px;">mi</span></div>
+          </div>
+          <!-- volume + unit toggle -->
+          <div style="margin-bottom: 12px;">
+            <div style="font-size: 10px; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Volume</div>
+            <div style="display: flex; gap: 6px;">
+              <div style="background: #2a2d35; border-radius: 12px; padding: 14px; font-size: 22px; color: #e5e7eb; font-weight: 600; flex: 1;">11.2</div>
+              <div style="display: flex; background: #2a2d35; border-radius: 12px; padding: 4px;">
+                <div style="background: #3b82f6; color: white; font-size: 12px; padding: 8px 10px; border-radius: 8px;">gal</div>
+                <div style="color: #9ca3af; font-size: 12px; padding: 8px 10px;">L</div>
+              </div>
+            </div>
+          </div>
+          <!-- cost + currency toggle -->
+          <div style="margin-bottom: 14px;">
+            <div style="font-size: 10px; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Cost</div>
+            <div style="display: flex; gap: 6px;">
+              <div style="background: #2a2d35; border-radius: 12px; padding: 14px; font-size: 22px; color: #e5e7eb; font-weight: 600; flex: 1;">42.18</div>
+              <div style="display: flex; background: #2a2d35; border-radius: 12px; padding: 4px;">
+                <div style="background: #3b82f6; color: white; font-size: 12px; padding: 8px 10px; border-radius: 8px;">USD</div>
+                <div style="color: #9ca3af; font-size: 12px; padding: 8px 10px;">CAD</div>
+              </div>
+            </div>
+          </div>
+          <!-- summary -->
+          <div style="background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.2); border-radius: 12px; padding: 10px 12px; margin-bottom: 14px; font-size: 11px; color: #93c5fd;">
+            $3.77/gal &nbsp;·&nbsp; 28.4 MPG since last fill
+          </div>
+          <!-- submit -->
+          <div style="background: #3b82f6; border-radius: 12px; padding: 16px; text-align: center; color: white; font-weight: 600; font-size: 16px;">Log fillup</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — Minimal</h3>
+      <p>Vehicle, odometer, volume + unit toggle, cost + currency toggle, fillup button. Defaults: date = now, fill-to-full = yes, no notes/tags. ~5 taps total.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding: 0; background: #0f1117;">
+      <div style="max-width: 320px; margin: 0 auto; padding: 12px; font-family: -apple-system, BlinkMacSystemFont, sans-serif;">
+        <div style="background: #1a1d24; border-radius: 28px; padding: 16px; border: 1px solid #2a2d35; box-shadow: 0 8px 24px rgba(0,0,0,0.4);">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 14px; padding: 0 4px;">
+            <div style="font-size: 13px; color: #9ca3af;">9:41</div>
+            <div style="font-size: 11px; color: #9ca3af;">⛽</div>
+          </div>
+          <!-- vehicle pill -->
+          <div style="background: #2a2d35; border-radius: 12px; padding: 10px 14px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between;">
+            <div>
+              <div style="font-size: 10px; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px;">Vehicle</div>
+              <div style="font-size: 15px; color: #e5e7eb; font-weight: 600;">2019 Civic Si</div>
+            </div>
+            <div style="color: #6b7280;">›</div>
+          </div>
+          <!-- odometer + date row -->
+          <div style="display: grid; grid-template-columns: 1.4fr 1fr; gap: 6px; margin-bottom: 10px;">
+            <div>
+              <div style="font-size: 10px; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Odometer</div>
+              <div style="background: #2a2d35; border-radius: 12px; padding: 12px; font-size: 18px; color: #e5e7eb; font-weight: 600;">87,432</div>
+            </div>
+            <div>
+              <div style="font-size: 10px; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Date</div>
+              <div style="background: #2a2d35; border-radius: 12px; padding: 12px; font-size: 14px; color: #e5e7eb;">May 7</div>
+            </div>
+          </div>
+          <!-- volume -->
+          <div style="margin-bottom: 10px;">
+            <div style="font-size: 10px; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Volume</div>
+            <div style="display: flex; gap: 6px;">
+              <div style="background: #2a2d35; border-radius: 12px; padding: 12px; font-size: 18px; color: #e5e7eb; font-weight: 600; flex: 1;">11.2</div>
+              <div style="display: flex; background: #2a2d35; border-radius: 12px; padding: 4px;">
+                <div style="background: #3b82f6; color: white; font-size: 11px; padding: 6px 10px; border-radius: 8px;">gal</div>
+                <div style="color: #9ca3af; font-size: 11px; padding: 6px 10px;">L</div>
+              </div>
+            </div>
+          </div>
+          <!-- cost -->
+          <div style="margin-bottom: 10px;">
+            <div style="font-size: 10px; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Cost</div>
+            <div style="display: flex; gap: 6px;">
+              <div style="background: #2a2d35; border-radius: 12px; padding: 12px; font-size: 18px; color: #e5e7eb; font-weight: 600; flex: 1;">42.18</div>
+              <div style="display: flex; background: #2a2d35; border-radius: 12px; padding: 4px;">
+                <div style="background: #3b82f6; color: white; font-size: 11px; padding: 6px 10px; border-radius: 8px;">USD</div>
+                <div style="color: #9ca3af; font-size: 11px; padding: 6px 10px;">CAD</div>
+              </div>
+            </div>
+          </div>
+          <!-- toggles -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 10px;">
+            <div style="background: rgba(59,130,246,0.12); border: 1px solid rgba(59,130,246,0.3); border-radius: 12px; padding: 10px; font-size: 12px; color: #93c5fd; text-align: center;">✓ Fill to full</div>
+            <div style="background: #2a2d35; border-radius: 12px; padding: 10px; font-size: 12px; color: #6b7280; text-align: center;">Missed fillup</div>
+          </div>
+          <!-- notes -->
+          <div style="margin-bottom: 12px;">
+            <div style="background: #2a2d35; border-radius: 12px; padding: 10px 12px; font-size: 12px; color: #6b7280;">+ Add note · station · grade</div>
+          </div>
+          <!-- summary -->
+          <div style="background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.2); border-radius: 12px; padding: 8px 12px; margin-bottom: 12px; font-size: 11px; color: #93c5fd;">
+            $3.77/gal &nbsp;·&nbsp; 28.4 MPG since last fill
+          </div>
+          <div style="background: #3b82f6; border-radius: 12px; padding: 14px; text-align: center; color: white; font-weight: 600; font-size: 15px;">Log fillup</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — Detailed (collapsible extras)</h3>
+      <p>Adds: editable date, fill-to-full / missed-fillup toggles, expandable "Add note · station · grade" section. More flexibility, slightly more vertical scroll.</p>
+    </div>
+  </div>
+</div>
+
+<p class="subtitle" style="margin-top: 18px;">Both auto-detect vehicle (last used), pre-fill date, and show a live summary (price/unit, MPG since last fill). The ✓ checkmark/highlighted unit shows the active selection. Real-time conversion happens on submit.</p>
