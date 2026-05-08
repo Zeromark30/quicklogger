@@ -145,9 +145,48 @@ removed on retry success, and marked `failed` on permanent (4xx)
 errors. The `/history` page surfaces the failed entries so the user
 can decide whether to fix and retry manually.
 
-### Service worker
+## Frontend pages
 
-(populated in Task 24)
+### `/` — main form
+The single most-used page. Implements mockup B from the design spec.
+Loads vehicle list + last fuelup via `+page.ts`. Reads `URL`
+query params for Apple-Shortcut deep-link pre-fill (Path 1 of the
+Shortcuts integration). `$effect` block fetches the FX rate when
+currency changes; `needsManualFx` toggles the manual-rate field when
+the chain is exhausted.
+
+Submit logic:
+1. Build `FuelSubmissionInput` with a fresh client UUID
+2. Try `POST /api/fuelup`
+3. On success: success toast + reset volatile fields + `savePrefs`
+4. On 4xx: rejection toast (don't queue — won't fix itself)
+5. On any other failure: enqueue to IndexedDB, show "queued" toast
+
+The summary line above the submit button shows live "Will log: X gal /
+$Y USD" + MPG-since-last-fill + a stale-FX warning when applicable.
+
+### Service worker (`src/service-worker.ts`)
+
+Three responsibilities:
+
+1. **App-shell precache** — on install, all build assets + static
+   files are added to the `quicklogger-shell-${version}` cache. Old
+   caches are pruned on activate. The user gets an instant launch on
+   subsequent loads.
+
+2. **Network-first for `/api/*`** — API calls are not cached (data
+   freshness wins). Failed GETs return a `504` so the page can show
+   an inline error rather than a generic browser offline page.
+
+3. **Queue sync on focus** — the layout sends a `sync-queue` message
+   to the SW on `window.focus`. The SW iterates `pendingSubmissions`
+   in IndexedDB, posts each `queued` entry to `/api/fuelup` (capped
+   at 5 attempts), removes successes, marks 4xx as failed.
+
+iOS doesn't fire Background Sync events reliably, so we use the
+focus-event pattern as the primary trigger. This means the user
+must reopen the app for queued submissions to flush — that's the
+realistic UX on iOS Safari today.
 
 ## Data flow
 
