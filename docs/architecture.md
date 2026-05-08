@@ -43,7 +43,41 @@ the chain.
 
 ### FX provider chain (`src/lib/server/currency.ts`)
 
-(populated in Task 7)
+Multi-provider FX rate resolver with persistent cache.
+
+**Public API:**
+- `CurrencyService` — class wrapping the chain logic. Constructor takes
+  `{ providers, fetcher, store }` for testability.
+- `JsonFileStore` — `FxStore` implementation backed by a JSON file
+  (default `/data/fx-cache.json`).
+- `realFetcher` — production `FxFetcher` that hits the actual upstream
+  providers with a 3s timeout.
+- `FxUnavailableError` — thrown when all providers fail and cache is
+  empty / older than 7 days.
+
+**Resolution order on `getRate(from, to)`:**
+1. Identity short-circuit if `from === to` → returns rate=1, source=`identity`.
+2. Disk cache hit (entry < 24h old) → returned with `stale: false`.
+3. Provider chain walked in `FX_PROVIDERS` order. First successful
+   response wins; cache updated on disk.
+4. All providers failed but cache exists and < 7 days old → returned
+   with `stale: true`.
+5. All providers failed and cache absent / > 7 days → throws
+   `FxUnavailableError`. The route handler catches this and signals
+   the UI to show the manual-override field.
+
+**Provider implementations:**
+| Provider | URL | Notes |
+|---|---|---|
+| frankfurter | `api.frankfurter.dev/v1/latest?base=...&symbols=...` | ECB, daily |
+| erapi | `open.er-api.com/v6/latest/${from}` | Free, no key |
+| fawazahmed | `cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/${from}.json` | jsDelivr CDN |
+| exchangerate-api | `v6.exchangerate-api.com/v6/${KEY}/latest/${from}` | Optional, key required |
+
+All providers use `AbortSignal.timeout(3000)`. Failures are logged
+with provider name + reason but never throw out of the chain — the
+service either returns a rate, returns a stale rate, or throws once at
+the end.
 
 ### LubeLogger client (`src/lib/server/lubelogger.ts`)
 
