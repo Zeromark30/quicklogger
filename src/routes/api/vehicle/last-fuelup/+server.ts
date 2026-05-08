@@ -1,0 +1,32 @@
+import { json } from '@sveltejs/kit';
+import { loadEnv } from '$lib/server/env';
+import { LubeLoggerClient, LubeLoggerError, type GasRecord } from '$lib/server/lubelogger';
+
+function parseDate(s: string): number {
+  const [m, d, y] = s.split('/').map(Number);
+  return new Date(y, m - 1, d).getTime();
+}
+
+export async function GET({ url }: { url: URL }) {
+  const vehicleIdRaw = url.searchParams.get('vehicleId');
+  if (!vehicleIdRaw) return json({ error: 'vehicleId required' }, { status: 400 });
+  const vehicleId = Number(vehicleIdRaw);
+  if (!Number.isFinite(vehicleId)) return json({ error: 'invalid vehicleId' }, { status: 400 });
+
+  try {
+    const env = loadEnv();
+    const client = new LubeLoggerClient({
+      baseUrl: env.lubeloggerUrl,
+      apiKey: env.lubeloggerApiKey
+    });
+    const records = await client.listGasRecords(vehicleId);
+    if (records.length === 0) return json(null);
+    const latest = records.reduce((acc: GasRecord, r) => parseDate(r.date) > parseDate(acc.date) ? r : acc);
+    return json(latest);
+  } catch (err) {
+    if (err instanceof LubeLoggerError) {
+      return json({ error: err.message }, { status: 502 });
+    }
+    return json({ error: (err as Error).message }, { status: 500 });
+  }
+}

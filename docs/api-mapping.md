@@ -53,3 +53,13 @@ Returns the LubeLogger vehicle list verbatim, JSON array.
   worker treats this as queue-eligible if the call is part of a
   submission flow.
 - No params. No request body. No auth (LAN-trust).
+
+### `GET /api/vehicle/last-fuelup?vehicleId=N`
+
+Returns the most recent `GasRecord` for the given vehicle, by date,
+or `null` if the vehicle has no records yet. Used by the form to
+compute "MPG since last fill" and pre-fill date defaults.
+
+- 400 on missing or non-numeric `vehicleId`.
+- 502 on LubeLogger upstream error.
+- Not cached — the form only calls this once per session.
