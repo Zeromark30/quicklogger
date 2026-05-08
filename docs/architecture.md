@@ -24,7 +24,22 @@ both server and edge runtimes.
 
 ### Environment configuration (`src/lib/server/env.ts`)
 
-(populated in Task 6)
+Single source of truth for env-var access. Other server modules import
+`loadEnv()` rather than reading `process.env` directly — this keeps
+validation centralized and makes the test surface obvious.
+
+Required: `LUBELOGGER_URL`, `LUBELOGGER_API_KEY`. Missing either at
+startup throws `EnvError`, which surfaces as a fast-fail container
+crash (visible in Discord via LoggiFly).
+
+Optional with defaults: `LUBELOGGER_VOLUME_UNIT` (`gallons_us`),
+`LUBELOGGER_CURRENCY` (`USD`), `FX_PROVIDERS`
+(`frankfurter,erapi,fawazahmed`), `FX_CACHE_PATH`
+(`/data/fx-cache.json`), `PORT` (`3000`), `ORIGIN` (none).
+
+`FX_PROVIDERS` is a CSV; unknown provider names throw `EnvError`.
+`EXCHANGERATE_API_KEY` is only required if `exchangerate-api` is in
+the chain.
 
 ### FX provider chain (`src/lib/server/currency.ts`)
 
