@@ -1,0 +1,4 @@
+# Default reviewer for every PR. Once a collaborator is added, list them
+# here for path-specific reviews. See:
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+*  @varunpan
