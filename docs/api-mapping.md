@@ -42,3 +42,14 @@ Liveness + LubeLogger reachability probe.
 
 Used by Traefik for routing decisions and by Dockhand for container
 health tracking. No auth required (LAN-trust model).
+
+### `GET /api/vehicles`
+
+Returns the LubeLogger vehicle list verbatim, JSON array.
+
+- Cached in-memory for 5 minutes (per-process, no Redis). Reduces
+  upstream chatter when the form mounts repeatedly.
+- 502 if LubeLogger is unreachable or returns non-2xx — the service
+  worker treats this as queue-eligible if the call is part of a
+  submission flow.
+- No params. No request body. No auth (LAN-trust).
