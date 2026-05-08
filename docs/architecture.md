@@ -85,7 +85,25 @@ the end.
 
 ### Conversion orchestrator (`src/lib/server/convert.ts`)
 
-(populated in Task 9)
+Combines `units.ts` and `currency.ts` into a single
+`convertSubmission()` call used by the `POST /api/fuelup` route.
+
+Input: raw user submission (`FuelInput`). Output: target-unit gallons +
+target-currency cost + FX provenance fields (rate, source, fetchedAt,
+stale flag).
+
+Behavior:
+- If `manualFxRate` is set on the input, the rate is used verbatim and
+  `fxSource` is recorded as `'manual'` — the currency service is not
+  consulted.
+- Otherwise the currency service resolves the rate per its provider
+  chain. Stale rates pass through with `fxStale: true`.
+- Volume is always converted via `toGallons`. Target unit other than
+  `gallons_us` throws — v0.1.0 only supports US-gallon LubeLogger
+  configurations. (Spec parking lot: multi-target-unit support.)
+
+Pure module — all I/O is delegated to the injected `CurrencyService`,
+which makes the whole thing trivially testable with a fake.
 
 ## Frontend
 
