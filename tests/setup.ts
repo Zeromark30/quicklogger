@@ -1,4 +1,5 @@
 import '@testing-library/jest-dom/vitest';
+import 'fake-indexeddb/auto';
 
 // Vitest's jsdom env doesn't expose `localStorage` / `sessionStorage` /
 // `indexedDB` on globalThis (its KEYS list pre-dates the Storage spec), and

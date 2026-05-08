@@ -128,6 +128,23 @@ is async + structured, the SW cache is opaque + binary. No state lives
 in shared in-memory stores — every page load reads from the
 authoritative source.
 
+**`IndexedDB` schema — `pendingSubmissions` store:**
+
+| Field | Type | Notes |
+|---|---|---|
+| `id` | autoincrement key | |
+| `input` | `FuelSubmissionInput` | the unmodified user payload |
+| `status` | `'queued' \| 'failed'` | failed = 4xx response, no auto-retry |
+| `attempts` | number | incremented per retry, capped at 5 |
+| `enqueuedAt` | ms epoch | for stale-entry pruning later |
+| `lastError` | string? | populated on failure |
+
+The queue is opened lazily by the service worker and re-used per page
+load via `Queue.open()`. Records are inserted on submission failure,
+removed on retry success, and marked `failed` on permanent (4xx)
+errors. The `/history` page surfaces the failed entries so the user
+can decide whether to fix and retry manually.
+
 ### Service worker
 
 (populated in Task 24)
