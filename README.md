@@ -1,42 +1,37 @@
-# sv
+# quicklogger
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+Mobile-first PWA for logging fuel fillups to a self-hosted [LubeLogger](https://lubelogger.com) instance.
 
-## Creating a project
+> **Status:** v0.1.0 — early. Single-user homelab tool. Public repo so anyone can fork and self-host.
 
-If you're seeing this, you've probably already done this step. Congrats!
+## Why
 
-```sh
-# create a new project
-npx sv create my-app
-```
+LubeLogger's web UI is great for review and analytics, but entering a fillup at the gas pump from a phone is fiddly. quicklogger is a one-form, install-as-PWA front door optimised for the pump.
 
-To recreate this project with the same configuration:
+## Features
 
-```sh
-# recreate this project
-npx sv@0.15.2 create --template minimal --types ts --install npm .
-```
+- One-screen fuel entry — vehicle picker, odometer, volume, cost, fill-to-full
+- Multi-unit input — gallons / liters, USD / CAD / EUR / etc., converted server-side to your LubeLogger's configured units
+- Offline queue — submissions saved locally if cell signal drops, auto-synced on reconnect
+- iOS Shortcut integration — voice ("Hey Siri, log fillup") and pre-filled deep-links
+- FX rate fallback chain — Frankfurter → er-api → fawazahmed currency-api, with disk cache + manual override
 
-## Developing
+## Quickstart
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+(populated in Task 32)
 
-```sh
-npm run dev
+## Configuration
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
+(populated in Task 32)
 
-## Building
+## Documentation
 
-To create a production version of your app:
+- [Architecture](docs/architecture.md)
+- [Deployment](docs/deployment.md)
+- [API mapping](docs/api-mapping.md)
+- [Apple Shortcuts](docs/shortcuts.md)
+- [UAT checklist](docs/uat.md)
 
-```sh
-npm run build
-```
+## License
 
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+MIT — see [LICENSE](LICENSE).

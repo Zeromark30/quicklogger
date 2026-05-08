@@ -21,3 +21,19 @@ Thumbs.db
 # Vite
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# tests
+coverage/
+playwright-report/
+test-results/
+
+# data
+data/
+fx-cache.json
+
+# editor
+.vscode/
+.idea/
+
+# brainstorm artifacts
+.superpowers/
