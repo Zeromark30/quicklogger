@@ -10,7 +10,17 @@ This document describes how quicklogger is put together. Each section is filled 
 
 ### Units conversion (`src/lib/server/units.ts`)
 
-(populated in Task 5)
+Pure conversion helpers between US gallons and liters. The constant
+`GAL_TO_L = 3.785411784` is the exact definitional ratio (US gallon, NIST).
+
+Public surface:
+- `toGallons(value, unit)` — convert to US gallons. `unit` is `'gal'` or `'L'`.
+- `toLiters(value, unit)` — convert to liters. Same units.
+- `GAL_TO_L` — the conversion constant, exposed for tests.
+
+Negative inputs throw `RangeError`; unknown units throw `TypeError`.
+The module has no external dependencies and is safe to import in
+both server and edge runtimes.
 
 ### Environment configuration (`src/lib/server/env.ts`)
 
