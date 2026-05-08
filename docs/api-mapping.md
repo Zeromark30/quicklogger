@@ -94,3 +94,58 @@ then enter the FX rate themselves; the form posts `manualFxRate` to
 `/api/fuelup`.
 
 400 if `from` or `to` is missing.
+
+### `POST /api/fuelup`
+
+Submits a fuel record to LubeLogger after applying unit + currency
+conversion. Accepts both `application/json` (Apple Shortcut direct-POST
+or fetch from the SPA) and `application/x-www-form-urlencoded` /
+`multipart/form-data` (HTML form fallback).
+
+**Request body (`FuelSubmissionInput`):**
+
+```json
+{
+  "vehicleId": 1,
+  "date": "2026-05-08",
+  "odometer": 87432,
+  "volume": 50,
+  "volumeUnit": "L",
+  "cost": 65,
+  "currency": "CAD",
+  "isFillToFull": true,
+  "missedFuelup": false,
+  "notes": "optional",
+  "tags": "optional",
+  "manualFxRate": 0.72,
+  "clientSubmissionId": "00000000-0000-0000-0000-000000000001"
+}
+```
+
+`manualFxRate` is optional — if present, the FX chain is bypassed and
+the rate is recorded with `source: manual`.
+
+`clientSubmissionId` is required — a UUID generated client-side. The
+backend deduplicates within a 60-second window so double-tap or
+service-worker-retry races don't double-log.
+
+**200 success body (`FuelSubmissionResult`):**
+
+```json
+{
+  "ok": true,
+  "submitted": {
+    "gallons": 13.21,
+    "cost": 47.45,
+    "fxRate": 0.73,
+    "fxSource": "frankfurter",
+    "fxStale": false
+  }
+}
+```
+
+**Errors:**
+- 400 — body parse error or missing required fields
+- 502 — LubeLogger 5xx or unreachable; service worker should queue
+- 401/4xx — passed through from LubeLogger when applicable
+- 500 — unexpected error
