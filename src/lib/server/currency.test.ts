@@ -12,7 +12,7 @@ function inMemoryStore(initial?: Record<string, FxCacheEntry>): FxStore {
 const HOUR = 60 * 60 * 1000;
 
 describe('CurrencyService', () => {
-  let now = new Date('2026-05-07T12:00:00Z').getTime();
+  const now = new Date('2026-05-07T12:00:00Z').getTime();
 
   beforeEach(() => {
     vi.useFakeTimers();

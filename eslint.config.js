@@ -15,6 +15,15 @@ export default [
     }
   },
   {
+    rules: {
+      '@typescript-eslint/no-unused-vars': ['error', {
+        argsIgnorePattern: '^_',
+        varsIgnorePattern: '^_',
+        caughtErrorsIgnorePattern: '^_'
+      }]
+    }
+  },
+  {
     ignores: ['build/', '.svelte-kit/', 'node_modules/', 'coverage/', 'playwright-report/']
   }
 ];
