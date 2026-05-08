@@ -32,4 +32,13 @@ the underlying fetch.
 
 ## quicklogger endpoints
 
-(populated in subsequent tasks)
+### `GET /healthz`
+
+Liveness + LubeLogger reachability probe.
+
+- 200 `{ ok: true }` if process is up and LubeLogger responded to
+  `/api/vehicles` within 2 seconds.
+- 503 `{ ok: false, error: string }` otherwise.
+
+Used by Traefik for routing decisions and by Dockhand for container
+health tracking. No auth required (LAN-trust model).
