@@ -63,3 +63,34 @@ compute "MPG since last fill" and pre-fill date defaults.
 - 400 on missing or non-numeric `vehicleId`.
 - 502 on LubeLogger upstream error.
 - Not cached — the form only calls this once per session.
+
+### `GET /api/fx?from=USD&to=CAD`
+
+Returns the FX rate between two ISO 4217 currencies, applying the
+chain + cache logic described in `docs/architecture.md` § FX provider
+chain.
+
+**200 success body:**
+```json
+{
+  "rate": 1.36,
+  "source": "frankfurter",
+  "fetchedAt": 1747920000000,
+  "stale": false,
+  "ageHours": 2.4
+}
+```
+
+`source` is `'identity'` when from === to. `stale: true` indicates
+the response came from a cache > 24h old (still acceptable, < 7d).
+
+**503 unavailable body:**
+```json
+{ "available": false }
+```
+
+This signals the UI to reveal the manual-override field. The user can
+then enter the FX rate themselves; the form posts `manualFxRate` to
+`/api/fuelup`.
+
+400 if `from` or `to` is missing.
