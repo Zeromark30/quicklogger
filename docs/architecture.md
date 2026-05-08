@@ -109,7 +109,24 @@ which makes the whole thing trivially testable with a fake.
 
 ### State management
 
-(populated in Task 16, Task 17)
+The frontend keeps state in three buckets, each with a clear purpose:
+
+- **`localStorage`** (`src/lib/client/prefs.ts`) — user preferences:
+  `lastVehicleId`, `defaultVolumeUnit`, `defaultCurrency`. Single
+  storage key `quicklogger.prefs` holds a JSON blob. Defaults are
+  used when storage is unavailable or content is malformed (private
+  browsing, cleared site data).
+
+- **`IndexedDB`** (`src/lib/client/idb.ts`) — offline submission
+  queue. See Task 17.
+
+- **Service worker `Cache Storage`** — app shell precache for instant
+  launch. See Task 24.
+
+These are intentionally separated: prefs are sync + tiny, the queue
+is async + structured, the SW cache is opaque + binary. No state lives
+in shared in-memory stores — every page load reads from the
+authoritative source.
 
 ### Service worker
 
