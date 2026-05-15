@@ -46,9 +46,7 @@ All notable changes to this project are documented here. Format roughly follows 
   chip when out-of-band.
 - **`POST /api/ocr`** — multipart photo → discriminated `OcrResult` JSON
   (pump or odometer). **`GET /api/ocr`** — status probe returning
-  `{ enabled, modes? }`. Receipt mode is wire-accepted but returns 501
-  (reserved for v0.2.1). See
-  [`docs/technical/idb-and-api.md`](docs/technical/idb-and-api.md).
+  `{ enabled, modes? }`.
 - **Provider chain.** When both ollama and OpenRouter are configured,
   ollama is tried first; OpenRouter is the single bounded fallback.
   Audit log records which provider actually served the request and

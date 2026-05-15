@@ -69,12 +69,6 @@ describe('GET /api/ocr', () => {
     expect(body.modes.sort()).toEqual(['odometer', 'pump']);
   });
 
-  it('does not advertise receipt mode in v0.2.0', async () => {
-    setEnv({ OPENROUTER_API_KEY: 'sk' });
-    const res = await GET({} as Parameters<typeof GET>[0]);
-    const body = await res.json();
-    expect(body.modes).not.toContain('receipt');
-  });
 });
 
 describe('POST /api/ocr', () => {
@@ -101,15 +95,6 @@ describe('POST /api/ocr', () => {
     fd.set('mode', 'banana');
     const res = await POST(makeRequest(fd));
     expect(res.status).toBe(400);
-  });
-
-  it('501 on mode=receipt (reserved)', async () => {
-    setEnv({ OLLAMA_VISION_URL: 'http://ollama:11434' });
-    const fd = new FormData();
-    fd.set('image', new File([JPEG], 'p.jpg', { type: 'image/jpeg' }));
-    fd.set('mode', 'receipt');
-    const res = await POST(makeRequest(fd));
-    expect(res.status).toBe(501);
   });
 
   it('415 on non-image bytes', async () => {

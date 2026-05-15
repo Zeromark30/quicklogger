@@ -33,12 +33,8 @@ export function _resetForTests() {
   rateLimiter = null; budget = null; audit = null; hmacKey = null;
 }
 
-// v0.2.0 advertises pump + odometer. 'receipt' is wire-accepted (returns 501)
-// but NOT listed here — listing it would imply usability.
 const ADVERTISED_MODES: OcrMode[] = ['pump', 'odometer'];
-// Wire-accepted modes the parser recognizes (drives 400 vs 501 vs valid).
-const ACCEPTED_WIRE_MODES = new Set<string>(['pump', 'odometer', 'receipt']);
-const RESERVED_MODES = new Set<string>(['receipt']);
+const ACCEPTED_WIRE_MODES = new Set<string>(['pump', 'odometer']);
 
 export const GET: RequestHandler = async () => {
   const env = loadEnv();
@@ -88,9 +84,6 @@ export const POST: RequestHandler = async ({ request, getClientAddress }) => {
   }
   if (!ACCEPTED_WIRE_MODES.has(modeRaw)) {
     return json({ error: `unknown mode: ${modeRaw}` }, { status: 400 });
-  }
-  if (RESERVED_MODES.has(modeRaw)) {
-    return json({ error: `${modeRaw} OCR not yet supported in this version` }, { status: 501 });
   }
   const mode = modeRaw as OcrMode;
 

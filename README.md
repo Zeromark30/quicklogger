@@ -15,7 +15,7 @@ LubeLogger's web UI is great for review and analytics, but entering a fill-up at
 - Auto-selects the last vehicle
 - Volume in gallons or liters, cost in any major currency — converted server-side
 - Live MPG-since-last-fill preview as you type
-- Last-fillup strip above the form + odometer prefill + one-tap `+300 mi` chip — see [`docs/user/odometer-prefill.md`](docs/user/odometer-prefill.md)
+- Last-fillup strip above the form + odometer prefill + one-tap `+300 mi` chip
 - Offline queue that auto-syncs when signal returns
 - iOS Shortcut integration (voice + deep-link)
 - Stays on your network — backend talks to LubeLogger over the internal Docker network, not the public internet
@@ -89,7 +89,7 @@ services:
       - PORT=3000
     volumes:
       - /srv/quicklogger/data:/data                # bind-mount for the FX cache
-    # Runtime hardening — see docs/deployment.md § "Hardening the runtime"
+    # Runtime hardening
     read_only: true
     tmpfs:
       - /tmp:rw,size=16m,mode=1777
@@ -129,7 +129,7 @@ For Caddy, nginx, or Cloudflare Tunnel: same idea — proxy `https://quicklog.ex
 
 ## Security posture
 
-Defaults intended to be reasonable for a single-user homelab tool. The deeper write-up lives in [`docs/deployment.md`](docs/deployment.md) § *Hardening the runtime* — short version:
+Defaults intended to be reasonable for a single-user homelab tool — short version:
 
 - **No app-side auth.** quicklogger has no login screen. Front it with HTTPS and either keep it on a private network (Tailscale, LAN, an internal-only hostname) or put it behind a forward-auth middleware (Authentik, Cloudflare Access, etc.).
 - **Container runs as `node` (UID 1000)**, not root.
@@ -150,7 +150,7 @@ Minimum vars to run:
 | `ORIGIN` | no | — | SvelteKit CSRF origin (set to your public URL) |
 | `PORT` | no | `3000` | App listen port |
 
-For the full reference (every var, type, default, override scenarios), see [`docs/user/configuration.md`](docs/user/configuration.md).
+Full reference for every env var lives in [`.env.example`](.env.example).
 
 ## Development
 
@@ -249,32 +249,9 @@ Local dev server, real phone, same WiFi:
 - `LUBELOGGER_URL` in `.env` must be reachable from the dev machine. If your LubeLogger is on the same network the dev machine is on, point at it directly (`https://lubelogger.example.com`). Otherwise, run a throwaway LubeLogger locally and point at `http://localhost:8080`.
 - **Don't pollute your real fuel log** — when testing against a live LubeLogger, create a dedicated `TEST – DELETE ME` vehicle and submit fillups against that. Clean it up periodically.
 
-### Architecture pointers
+### Release history
 
-**User guides:**
-
-- [`docs/user/app-pages.md`](docs/user/app-pages.md) — tour of the four app pages (Log Fuel / Vehicles / Settings / History)
-- [`docs/user/configuration.md`](docs/user/configuration.md) — full env-var reference
-- [`docs/user/currency-fx.md`](docs/user/currency-fx.md) — entering cost in any currency, server-side conversion
-- [`docs/user/odometer-prefill.md`](docs/user/odometer-prefill.md) — odometer prefill + last-fillup strip
-- [`docs/user/offline-queue.md`](docs/user/offline-queue.md) — how offline submission and replay works from the user's side
-- [`docs/user/shortcuts.md`](docs/user/shortcuts.md) — Apple Shortcuts recipes
-
-**Technical / internals:**
-
-- [`docs/architecture.md`](docs/architecture.md) — high-level map of modules, FX chain, state, service worker (details live in the focused docs below)
-- [`docs/technical/fx-chain.md`](docs/technical/fx-chain.md) — provider chain order, cache, resolution flow
-- [`docs/technical/idb-and-api.md`](docs/technical/idb-and-api.md) — full IDB schema, every HTTP endpoint enumerated, plus the LubeLogger upstream call mapping
-- [`docs/technical/odometer-prefill.md`](docs/technical/odometer-prefill.md) — odometer prefill internals (state model, lifecycle, edge cases)
-- [`docs/technical/offline-odometer-prefill.md`](docs/technical/offline-odometer-prefill.md) — odometer prefill behaviour while offline (cache + queue resolution)
-- [`docs/technical/offline-queue.md`](docs/technical/offline-queue.md) — IDB schema, status state machine, replay path
-- [`docs/technical/service-worker.md`](docs/technical/service-worker.md) — shell cache, install/activate, fetch decision tree
-
-**Operations:**
-
-- [`docs/deployment.md`](docs/deployment.md) — image build, CI, GHCR release, runtime hardening
-- [`docs/uat.md`](docs/uat.md) — manual test plan
-- [`CHANGELOG.md`](CHANGELOG.md) — release history
+- [`CHANGELOG.md`](CHANGELOG.md)
 
 ### Contributing
 
@@ -289,7 +266,7 @@ PRs welcome. The repo is small enough to read in one sitting:
    ```
 
 4. Branch protection on `main` requires a green `lint-and-test` check and a PR (no direct pushes).
-5. For changes that touch visible UI, run through [`docs/uat.md`](docs/uat.md) on a real phone before requesting review.
+5. For changes that touch visible UI, test on a real phone (via `npm run preview:lan` or a deployed image) before requesting review.
 
 ## License
 
