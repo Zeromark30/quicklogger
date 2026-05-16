@@ -303,7 +303,6 @@ old-era rows over time; no backfill.
 |---|---|---|
 | No providers configured | `GET /api/ocr` → `{ enabled: false }`; UI hides chips | Feature opt-in; nothing rendered when nothing configured |
 | Ollama transient outage with both configured | Chain falls through to OpenRouter; `lastFellbackTo='ollama'` audited | Bounded single-fallback — not a retry loop |
-| `mode=receipt` POST in v0.2.0 | 501 Not Implemented; `modes` array does NOT advertise it | Wire-accepted (forward-compat), but listing would imply usability |
 | Pump cross-field drift > 5% | 422 + range-style toast; chip never shown | Adversarial-image / OCR-confusion guard |
 | Odometer detected < last fillup | Amber advisory chip, `[Use anyway]` writes field | Odometers don't run backwards, but legitimate cases exist (replaced cluster, odometer rollover at high mileage); user owns the call |
 | Odometer jumped > 2000 mi | Amber advisory chip, `[Use anyway]` writes field | Hardcoded `ODOMETER_MAX_DELTA_MI`; long road trips are real; user owns the call. Promotable to Settings if real travel routinely hits this |
@@ -340,8 +339,8 @@ old-era rows over time; no backfill.
 
 **Provider interface takes `(bytes, prompt, schema)`, not `(bytes, mode)`.**
 Providers know nothing about modes. The mode-specific logic — prompt,
-schema, validators — lives entirely in `ocrModes.ts`. Adding `receipt`
-in v0.2.1 is a single `MODES` map entry; provider code doesn't change.
+schema, validators — lives entirely in `ocrModes.ts`. Adding a new mode
+is a single `MODES` map entry; provider code doesn't change.
 
 **`MODES` is a discriminated map, not a class hierarchy.** Each entry
 returns a `ValidationResult<T>` with the discriminator (`mode: 'pump'`
@@ -435,10 +434,9 @@ legitimate output. Worst-case per-call cost is then bounded at
 `OPENROUTER_COST_CENTS` estimate) if Gemini's 65k-token output
 ceiling were ever hit. Not env-configurable on purpose: operators
 shouldn't have to tune the anti-runaway value, and the `MODES` map
-is the right surface if a future mode (e.g. v0.2.1 receipt mode,
-which returns more fields) needs a different cap. Ollama path is
-unaffected — local inference is free and `format: schema` already
-constrains output naturally.
+is the right surface if a future mode that returns more fields
+needs a different cap. Ollama path is unaffected — local inference
+is free and `format: schema` already constrains output naturally.
 
 **No image queue-for-replay in the service worker.** Images are
 ~300 KB → IDB bloats fast. By the time network returns, the user has
@@ -483,11 +481,6 @@ would cross 10 MiB, the file is truncated to 0 bytes — old entries are
 discarded, not shipped elsewhere. Acceptable for a homelab single-user
 tool. If the volume of OCR calls ever justified retention, this is the
 extension point.
-
-**`receipt` is wire-accepted (parser doesn't reject) but returns 501
-in v0.2.0.** Lets v0.2.1 ship by adding a `MODES.receipt` entry without
-a wire-format change — clients written against the v0.2.0 contract that
-happen to send `mode=receipt` get a clear 501, not a 400.
 
 **No `OcrError` type in `$lib/shared/types`.** The client `postOcr` adds
 an `OcrError` interface only on the client side (it carries DOM-only
@@ -637,10 +630,6 @@ should be similar. Use this as a sanity check, not as the answer.
 
 ## Future considerations
 
-- **Receipt mode (v0.2.1).** Required: `volume`, `cost`. Nice-to-have:
-  `date`, `station`, `fuelGrade`. Local ollama accuracy on receipts is
-  lower than cloud — README disclosure planned; operator can opt out of
-  ollama for receipt mode via a config switch (TBD design in v0.2.1).
 - **Per-vehicle odometer delta.** `ODOMETER_MAX_DELTA_MI=2000` is one
   size fits all. Long-trip commuters may want 5000; daily-commuter
   vehicles may want 500. Promotable alongside existing per-vehicle

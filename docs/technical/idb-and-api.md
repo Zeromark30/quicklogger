@@ -254,9 +254,7 @@ or
 
 `enabled` is `true` iff at least one of `OLLAMA_VISION_URL` /
 `OPENROUTER_API_KEY` is set. `modes` lists modes the dispatcher actively
-handles in this version (`receipt` is wire-accepted but reserved; it
-returns 501 and is NOT advertised here — listing it would imply
-usability). Used by the `/` page loader to decide whether to render the
+handles. Used by the `/` page loader to decide whether to render the
 camera affordances.
 
 ### `POST /api/ocr` — read pump or odometer (v0.2.0+)
@@ -264,7 +262,7 @@ camera affordances.
 **Request:** `multipart/form-data`
 
 - `image` — image file (JPEG / PNG / WebP / HEIC), ≤ 5 MiB post-multipart.
-- `mode` — `'pump'` | `'odometer'`. `'receipt'` is wire-accepted but returns 501 (reserved for v0.2.1).
+- `mode` — `'pump'` | `'odometer'`.
 
 **200 response (discriminated by `mode`):**
 
@@ -286,7 +284,6 @@ or
 | 415 | magic-byte sniff failed (not JPEG/PNG/WebP/HEIC) | — |
 | 422 | per-mode range failure OR cross-field drift > 5% (pump) | — |
 | 429 | per-IP rate limit | `Retry-After: <sec>` |
-| 501 | `mode=receipt` (reserved for v0.2.1) | — |
 | 502 | all providers failed, or returned malformed JSON | — |
 | 503 | no provider configured (UI should hide camera via `GET /api/ocr`) | — |
 

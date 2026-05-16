@@ -207,7 +207,6 @@ device while online (so the local cache is populated).
 - [ ] 21 rapid OCR taps within an hour → 21st attempt shows "OCR rate limit reached, try again in Ns" toast
 - [ ] Disconnect network mid-OCR → after 90 s, "OCR took too long — please type values" toast surfaces
 - [ ] Provider configured but reachable upstream is down → 502 → "OCR service unreachable — please type values" toast
-- [ ] Send a `mode=receipt` request directly (e.g., from curl/Postman) → 501 (camera UI doesn't surface this; cosmetic check)
 
 ## Photo OCR — disk state
 

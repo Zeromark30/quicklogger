@@ -128,7 +128,7 @@ The `MODES` map (keyed by `OcrMode`) is the single source of truth for
 mode-specific prompt, JSON schema, schema validator (hand-written, no
 zod), range validator (env-bound), and optional cross-field validator.
 The dispatcher switches on mode by `MODES[mode]` lookup — no `if/else`
-chains; adding `receipt` in v0.2.1 is a single map-entry addition.
+chains.
 
 **Pump contract** — schema-validates `{ volume, volumeUnit ∈ ['gal','L'],
 cost, pricePerUnit }`. Range-validates each numeric against
