@@ -104,13 +104,18 @@ resolves and the SSR'd page is returned unchanged.
 - **SW-cache over localStorage** for the vehicle list keeps all offline logic in
   the worker and leaves `+page.ts` / `listVehicles()` untouched — the SW
   intercepts the existing fetch transparently.
-- **`controllerchange` reload handshake** (added by whole-app review #7's fix):
-  the shell + chunks are precached atomically per version, so a fresh offline
-  cold-start is internally consistent — but a tab already open across a deploy
-  keeps running the old build's JS while the new SW claims it and prunes the
-  old shell cache. `registerControllerReload` (`src/lib/client/sw-update.ts`)
-  reloads the page when a controlled page's controller changes, guarded so the
-  first-ever claim doesn't reload.
+- **`controllerchange` reload handshake** (added by whole-app review #7's fix,
+  hardened by #39's): the shell + chunks are precached atomically per version,
+  so a fresh offline cold-start is internally consistent — but a tab already
+  open across a deploy keeps running the old build's JS while the new SW
+  claims it and prunes the old shell cache. `registerControllerReload`
+  (`src/lib/client/sw-update.ts`) reloads the page only when the controlling
+  worker's build version actually differs from the page's (queried over a
+  MessageChannel), capped at one reload per build per tab session — a bare
+  `controllerchange` is not a reliable "new deploy" signal on WebKit, and
+  reloading on every one made the installed PWA reload-loop (#39, v0.2.7
+  regression, fixed in v0.2.8). Full decision flow:
+  [`service-worker.md`](./service-worker.md).
 
 ## Testing
 
